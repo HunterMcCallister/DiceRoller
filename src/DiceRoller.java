@@ -16,16 +16,33 @@ public class DiceRoller {
         System.out.println("Rolling a " + sides + "-sided dice " + rolls + " rolls");
         for (int i = 1; i <= rolls; i++) {
             int roll = random.nextInt(sides) + 1; // Random number between 1 and sides +1 because it starts at 0
-            frequencies[roll -1]++; // increments the array at that rolls location.
+            frequencies[roll - 1]++; // increments the array at that rolls location.
             System.out.println("Roll #" + i + ": " + roll);
             sumDice += roll;
         }
         System.out.println("\n --- Total ---\nTotal of all rolls: " + sumDice);
         double average = (double) sumDice / rolls;
         System.out.println("\n --- Average ---\nAverage of all rolls: " + average);
+
+        // Display the frequencies
         System.out.println("\n --- Frequencies ---");
         for (int i = 0; i < frequencies.length; i++) {
             System.out.println((i + 1) + ": " + frequencies[i] + " times");// i + 1maps the index (0-based) to the dice (1-based)
+        }
+
+        // Find the most frequent rolls
+        int maxFrequency = 0;
+        for (int frequency : frequencies) {
+            if (frequency > maxFrequency) {
+                maxFrequency = frequency; // Update the max frequencies
+            }
+        }
+
+        System.out.println("\n --- Max frequency ---");
+        for (int i = 0; i < frequencies.length; i++) {
+            if (frequencies[i] == maxFrequency){
+                System.out.println("Face " + (i + 1) + ": " + frequencies[i] + " times");
+            }
         }
     }
 
