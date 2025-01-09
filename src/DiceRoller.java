@@ -31,16 +31,12 @@ public class DiceRoller {
         }
 
         // Find the most frequent rolls
-        int maxFrequency = 0;
-        for (int frequency : frequencies) {
-            if (frequency > maxFrequency) {
-                maxFrequency = frequency; // Update the max frequencies
-            }
-        }
+        int maxFrequency = findMaxFrequencies(frequencies);
+
 
         System.out.println("\n --- Max frequency ---");
         for (int i = 0; i < frequencies.length; i++) {
-            if (frequencies[i] == maxFrequency){
+            if (frequencies[i] == maxFrequency) {
                 System.out.println("Face " + (i + 1) + ": " + frequencies[i] + " times");
             }
         }
@@ -49,31 +45,80 @@ public class DiceRoller {
     public static void main(String[] args) {
         DiceRoller diceRoller = new DiceRoller(); // create the Object dice roller
         Scanner scanner = new Scanner(System.in); // Scanner for user input
+        boolean keepPlaying = true; // starts positive for the game loop
 
-        int sides = getPositiveInput(scanner, "Enter the number of sides for the dice: ");
-        int rolls = getPositiveInput(scanner, "Enter the number of rolls for the dice: ");
 
-        diceRoller.rollDice(sides, rolls);
+        while (keepPlaying) {
+            System.out.print("Want to play Dice Roller? (Y/N): ");
+            String playResponse = scanner.nextLine().toLowerCase();
+
+            switch (playResponse) {
+                case "y":
+                    int sides = getPositiveInput(scanner, "Enter the number of sides for the dice: ");
+                    int rolls = getPositiveInput(scanner, "Enter the number of rolls for the dice: ");
+                    diceRoller.rollDice(sides, rolls);
+
+                    boolean validResponse = false;
+
+                    while (!validResponse) {
+                        System.out.print("Roll again? (Y/N): ");
+                        String rollAgainResponse = scanner.nextLine().toLowerCase();
+                        if (rollAgainResponse.equals("y")) {
+                            validResponse = true;
+                        } else if (rollAgainResponse.equals("n")) {
+                            validResponse = true;
+                            keepPlaying = false;
+                            System.out.println("Goodbye!");
+                        } else {
+                            System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                        }
+                    }
+                    break;
+
+                case "n":
+                    keepPlaying = false;
+                    System.out.print("Goodbye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid input. Please enter 'y' or 'n'.");
+
+            }
+        }
+
+
         scanner.close();
 
     }
-    private static int getPositiveInput(Scanner scanner, String prompt){
+
+    private static int getPositiveInput(Scanner scanner, String prompt) {
         int value = -1; // initialize with an invalid value for the loops
-        while(value <= 0){ //keep looping until a positive number is given.
+        while (value <= 0) { //keep looping until a positive number is given.
             System.out.print(prompt);
             if (scanner.hasNextInt()) {
                 value = scanner.nextInt(); //read the integer
+                scanner.nextLine(); // clears to scanner to avoid conflict with loop
                 if (value <= 0) {
                     System.out.println("Must be a positive number");
                 }
             } else {
                 System.out.println("Must be a positive number");
-                scanner.next(); // clears the invalid input
+                scanner.nextLine(); // clears the invalid input
             }
 
 
         }
         return value; //returns a verified integer
+    }
+
+    private int findMaxFrequencies(int[] frequencies) {
+        int maxFrequency = 0;
+        for (int frequency : frequencies) {
+            if (frequency > maxFrequency) {
+                maxFrequency = frequency;
+            }
+        }
+        return maxFrequency;
     }
 
 }
